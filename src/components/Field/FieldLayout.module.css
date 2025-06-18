@@ -1,0 +1,19 @@
+.field {
+	display: grid;
+	grid-template-columns: repeat(3, 100px);
+	grid-template-rows: repeat(3, 100px);
+}
+
+.field-item {
+	border: 1px solid #eee;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 50px;
+	font-weight: 800;
+	cursor: pointer;
+}
+
+.field-item.filled {
+	cursor: default;
+}
