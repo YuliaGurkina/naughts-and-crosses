@@ -1,17 +1,13 @@
 import styles from './FieldLayout.module.css';
 
-export const FieldLayout = () => {
+export const FieldLayout = ({ field }) => {
 	return (
 		<div className={styles.field}>
-			<div className={styles['field-item'] + ' ' + styles.filled}>X</div>
-			<div className={styles['field-item']}></div>
-			<div className={styles['field-item']}></div>
-			<div className={styles['field-item']}></div>
-			<div className={styles['field-item'] + ' ' + styles.filled}>O</div>
-			<div className={styles['field-item']}></div>
-			<div className={styles['field-item']}></div>
-			<div className={styles['field-item']}></div>
-			<div className={styles['field-item']}></div>
+			{field.map((item) => {
+				return <div className={styles['field-item']}>{item}</div>;
+			})}
 		</div>
 	);
 };
+
+/* <div className={styles['field-item'] + ' ' + styles.filled}>X</div>*/

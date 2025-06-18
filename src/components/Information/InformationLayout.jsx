@@ -1,9 +1,14 @@
 import styles from './InformationLayout.module.css';
 
-export const InformationLayout = () => {
+export const InformationLayout = ({ currentPlayer, isGameEnded, isDraw }) => {
 	return (
 		<h2 className={styles.information}>
-			Текущий ход: <span>X</span>
+			{isDraw
+				? 'Ничья'
+				: isGameEnded
+					? `Победа: ${currentPlayer}`
+					: `Ходит: ${currentPlayer}`}
 		</h2>
 	);
 };
+//Текущий ход: <span>{currentPlayer}</span>
