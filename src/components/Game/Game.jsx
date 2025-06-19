@@ -11,11 +11,13 @@ export const Game = () => {
 	return (
 		<GameLayout
 			field={field}
-			onSetField={setField}
+			setField={setField}
 			currentPlayer={currentPlayer}
 			setCurrentPlayer={setCurrentPlayer}
 			isGameEnded={isGameEnded}
+			setIsGameEnded={setIsGameEnded}
 			isDraw={isDraw}
+			setIsDraw={setIsDraw}
 		/>
 	);
 };
