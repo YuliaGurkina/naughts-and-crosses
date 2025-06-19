@@ -4,15 +4,11 @@ import { Field } from '../Field/Field';
 import styles from './GameLayout.module.css';
 import IconRestart from '../../assets/icon-restart.svg?react';
 
-export const GameLayout = ({ field, currentPlayer, isGameEnded, isDraw }) => {
+export const GameLayout = (props) => {
 	return (
 		<div className={styles.app}>
-			<Information
-				currentPlayer={currentPlayer}
-				isGameEnded={isGameEnded}
-				isDraw={isDraw}
-			/>
-			<Field field={field} />
+			<Information {...props} />
+			<Field {...props} />
 			<button className={styles.button}>
 				Начать заново <IconRestart />
 			</button>
