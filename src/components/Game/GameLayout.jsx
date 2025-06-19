@@ -4,6 +4,8 @@ import { Field } from '../Field/Field';
 import styles from './GameLayout.module.css';
 import IconRestart from '../../assets/icon-restart.svg?react';
 
+import PropTypes from 'prop-types';
+
 export const GameLayout = (props) => {
 	const onButtonResetClick = () => {
 		props.setCurrentPlayer('X');
@@ -20,4 +22,11 @@ export const GameLayout = (props) => {
 			</button>
 		</div>
 	);
+};
+
+GameLayout.propTypes = {
+	setField: PropTypes.func,
+	setCurrentPlayer: PropTypes.func,
+	setIsGameEnded: PropTypes.func,
+	setIsDraw: PropTypes.func,
 };
