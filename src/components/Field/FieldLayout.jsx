@@ -11,8 +11,6 @@ const WIN_PATTERNS = [
 	[2, 4, 6], // Варианты побед по диагонали
 ];
 
-let isWinner = false;
-
 export const FieldLayout = ({
 	field,
 	setField,
@@ -22,22 +20,25 @@ export const FieldLayout = ({
 	setIsGameEnded,
 	setIsDraw,
 }) => {
+	const checkIsWinner = (newFields) => {
+		return WIN_PATTERNS.some((item) => {
+			const [a, b, c] = [...item];
+			return (
+				newFields[a].length &
+				newFields[b].length &
+				newFields[c].length &
+				(newFields[a] === newFields[b]) &
+				(newFields[a] === newFields[c])
+			);
+		});
+	};
 	const onFieldItemClick = (event) => {
 		const index = event.target.dataset.index;
 		if (!field[index] && !isGameEnded) {
 			setField((prevFields) => {
 				const newFields = [...prevFields]; // Create a shallow copy
 				newFields[index] = currentPlayer; // Modify the copy
-				isWinner = WIN_PATTERNS.some((item) => {
-					const [a, b, c] = [...item];
-					return (
-						newFields[a].length &
-						newFields[b].length &
-						newFields[c].length &
-						(newFields[a] === newFields[b]) &
-						(newFields[a] === newFields[c])
-					);
-				});
+				isWinner = checkIsWinner(newFields);
 				if (!isWinner & !isFieldsFull) {
 					//console.log('change player');
 					setCurrentPlayer(currentPlayer === 'X' ? '0' : 'X');
@@ -51,6 +52,7 @@ export const FieldLayout = ({
 		return item.length > 0;
 	});
 
+	let isWinner = checkIsWinner(field);
 	if (isWinner) {
 		//console.log('winner');
 		setIsGameEnded(true);
