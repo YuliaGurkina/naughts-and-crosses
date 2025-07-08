@@ -1,22 +1,22 @@
 import { Information } from '../Information/Information';
 import { Field } from '../Field/Field';
+import { store } from '../../store';
 
 import styles from './GameLayout.module.css';
 import IconRestart from '../../assets/icon-restart.svg?react';
 
 import PropTypes from 'prop-types';
 
-export const GameLayout = (props) => {
+export const GameLayout = () => {
 	const onButtonResetClick = () => {
-		props.setCurrentPlayer('X');
-		props.setIsGameEnded(false);
-		props.setIsDraw(false);
-		props.setField(['', '', '', '', '', '', '', '', '']);
+		store.dispatch({
+			type: 'RESTART_GAME',
+		});
 	};
 	return (
 		<div className={styles.app}>
-			<Information {...props} />
-			<Field {...props} />
+			<Information />
+			<Field />
 			<button className={styles.button} onClick={onButtonResetClick}>
 				Начать заново <IconRestart />
 			</button>

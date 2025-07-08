@@ -1,8 +1,18 @@
-import styles from './InformationLayout.module.css';
-
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-export const InformationLayout = ({ currentPlayer, isGameEnded, isDraw }) => {
+import styles from './InformationLayout.module.css';
+import { store } from '../../store';
+import { subscriber } from '../../subscriber';
+
+export const InformationLayout = () => {
+	const [appStore, setAppStore] = useState(store.getState());
+
+	useEffect(() => {
+		subscriber(setAppStore);
+	}, []);
+
+	const { currentPlayer, isGameEnded, isDraw } = appStore;
 	return (
 		<h2 className={styles.information}>
 			{isDraw

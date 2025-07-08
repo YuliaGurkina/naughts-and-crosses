@@ -1,6 +1,9 @@
-import styles from './FieldLayout.module.css';
-
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+
+import styles from './FieldLayout.module.css';
+import { store } from '../../store';
+import { subscriber } from '../../subscriber';
 
 const WIN_PATTERNS = [
 	[0, 1, 2],
@@ -13,15 +16,14 @@ const WIN_PATTERNS = [
 	[2, 4, 6], // Варианты побед по диагонали
 ];
 
-export const FieldLayout = ({
-	field,
-	setField,
-	currentPlayer,
-	setCurrentPlayer,
-	isGameEnded,
-	setIsGameEnded,
-	setIsDraw,
-}) => {
+export const FieldLayout = () => {
+	const { field, isGameEnded } = store.getState();
+	const [appStore, setAppStore] = useState(store.getState());
+
+	useEffect(() => {
+		subscriber(setAppStore);
+	}, []);
+
 	const checkIsWinner = (newFields) => {
 		return WIN_PATTERNS.some((item) => {
 			const [a, b, c] = [...item];
@@ -37,16 +39,24 @@ export const FieldLayout = ({
 	const onFieldItemClick = (event) => {
 		const index = event.target.dataset.index;
 		if (!field[index] && !isGameEnded) {
-			setField((prevFields) => {
-				const newFields = [...prevFields]; // Create a shallow copy
-				newFields[index] = currentPlayer; // Modify the copy
-				isWinner = checkIsWinner(newFields);
-				if (!isWinner & !isFieldsFull) {
-					//console.log('change player');
-					setCurrentPlayer(currentPlayer === 'X' ? '0' : 'X');
-				}
-				return newFields; // Update the state with the new array
+			let newFields = [...appStore.field]; // Create a shallow copy
+			newFields[index] = appStore.currentPlayer; // Modify the copy
+			isWinner = checkIsWinner(newFields);
+			if (!isWinner & !isFieldsFull) {
+				console.log('change player');
+
+				store.dispatch({
+					type: 'SET_CURRENT_PLAYER',
+					payload: appStore.currentPlayer === 'X' ? '0' : 'X',
+				});
+				console.log('currentPlayer', appStore.currentPlayer);
+			}
+
+			store.dispatch({
+				type: 'SET_FIELD',
+				payload: newFields,
 			});
+			console.log(appStore);
 		}
 	};
 
@@ -55,14 +65,18 @@ export const FieldLayout = ({
 	});
 
 	let isWinner = checkIsWinner(field);
-	if (isWinner) {
-		//console.log('winner');
-		setIsGameEnded(true);
+	if (isWinner && !appStore.isGameEnded) {
+		store.dispatch({
+			type: 'SET_IS_GAME_ENDED',
+			payload: true,
+		});
 	}
 
 	if (isFieldsFull & !isWinner) {
-		//console.log('draw');
-		setIsDraw(true);
+		store.dispatch({
+			type: 'SET_IS_DRAW',
+			payload: true,
+		});
 	}
 
 	return (
