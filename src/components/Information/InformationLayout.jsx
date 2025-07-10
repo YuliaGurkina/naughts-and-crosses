@@ -1,18 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import styles from './InformationLayout.module.css';
-import { store } from '../../store';
-import { subscriber } from '../../subscriber';
 
 export const InformationLayout = () => {
-	const [appStore, setAppStore] = useState(store.getState());
+	const currentPlayer = useSelector((state) => state.currentPlayer);
+	const isGameEnded = useSelector((state) => state.isGameEnded);
+	const isDraw = useSelector((state) => state.isDraw);
 
-	useEffect(() => {
-		subscriber(setAppStore);
-	}, []);
-
-	const { currentPlayer, isGameEnded, isDraw } = appStore;
 	return (
 		<h2 className={styles.information}>
 			{isDraw
