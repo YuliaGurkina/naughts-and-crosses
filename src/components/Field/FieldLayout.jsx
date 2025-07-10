@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import styles from './FieldLayout.module.css';
-import { store } from '../../store';
-import { subscriber } from '../../subscriber';
 
 const WIN_PATTERNS = [
 	[0, 1, 2],
@@ -17,12 +15,10 @@ const WIN_PATTERNS = [
 ];
 
 export const FieldLayout = () => {
-	const { field, isGameEnded } = store.getState();
-	const [appStore, setAppStore] = useState(store.getState());
-
-	useEffect(() => {
-		subscriber(setAppStore);
-	}, []);
+	const field = useSelector((state) => state.field);
+	const isGameEnded = useSelector((state) => state.isGameEnded);
+	const currentPlayer = useSelector((state) => state.currentPlayer);
+	const dispatch = useDispatch();
 
 	const checkIsWinner = (newFields) => {
 		return WIN_PATTERNS.some((item) => {
@@ -39,24 +35,20 @@ export const FieldLayout = () => {
 	const onFieldItemClick = (event) => {
 		const index = event.target.dataset.index;
 		if (!field[index] && !isGameEnded) {
-			let newFields = [...appStore.field]; // Create a shallow copy
-			newFields[index] = appStore.currentPlayer; // Modify the copy
+			let newFields = [...field]; // Create a shallow copy
+			newFields[index] = currentPlayer; // Modify the copy
 			isWinner = checkIsWinner(newFields);
 			if (!isWinner & !isFieldsFull) {
-				console.log('change player');
-
-				store.dispatch({
+				dispatch({
 					type: 'SET_CURRENT_PLAYER',
-					payload: appStore.currentPlayer === 'X' ? '0' : 'X',
+					payload: currentPlayer === 'X' ? '0' : 'X',
 				});
-				console.log('currentPlayer', appStore.currentPlayer);
 			}
 
-			store.dispatch({
+			dispatch({
 				type: 'SET_FIELD',
 				payload: newFields,
 			});
-			console.log(appStore);
 		}
 	};
 
@@ -65,15 +57,15 @@ export const FieldLayout = () => {
 	});
 
 	let isWinner = checkIsWinner(field);
-	if (isWinner && !appStore.isGameEnded) {
-		store.dispatch({
+	if (isWinner && !isGameEnded) {
+		dispatch({
 			type: 'SET_IS_GAME_ENDED',
 			payload: true,
 		});
 	}
 
 	if (isFieldsFull & !isWinner) {
-		store.dispatch({
+		dispatch({
 			type: 'SET_IS_DRAW',
 			payload: true,
 		});
